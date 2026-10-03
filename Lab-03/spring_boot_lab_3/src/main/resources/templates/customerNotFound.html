@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Customer Not Found</title>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+
+<h1>Customer Not Found</h1>
+<p>Sorry, no customer was found with ID
+    <span th:text="${customerId}">123</span>.
+</p>
+
+<p>
+    <a th:href="@{/customers}">Back to all customers</a>
+</p>
+
+</body>
+</html>
