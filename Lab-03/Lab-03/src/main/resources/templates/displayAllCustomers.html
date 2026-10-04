@@ -1,11 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>All Customers</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border-bottom: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        td {
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
 </head>
 <body>
-All Customers are to be displayed here! <br>
-For the time being, check the console and observe the output
+<h1>Customer List</h1>
+<table>
+    <tr>
+        <th> <strong>Customer ID</strong> </th>
+        <th> <strong>Name</strong> </th>
+        <th> <strong>Email</strong> </th>
+        <th> <strong>Address</strong> </th>
+        <th> <strong>City</strong> </th>
+        <th> <strong>Reviews</strong> </th>
+    </tr>
+
+    <tr th:each="customer : ${customerList}">
+        <td th:text="${customer.customerId}"></td>
+        <td th:text="${customer.firstName}+ ' ' +${customer.lastName}"></td>
+        <td th:text="${customer.email}"></td>
+        <td th:text="${customer.address}"></td>
+        <td th:text="${customer.city}"></td>
+
+        <td>
+            <ul>
+                <li th:each="review : ${customer.reviewList}">
+                    <strong>
+                        Rating: <span th:text="${review.rating}"></span> / 5
+                    </strong>
+                    <span th:text="${review.reviewText}"></span>
+                </li>
+            </ul>
+            <span th:unless="${not #lists.isEmpty(customer.reviewList)}">
+                No Reviews Available
+            </span>
+        </td>
+    </tr>
+</table>
 </body>
 </html>

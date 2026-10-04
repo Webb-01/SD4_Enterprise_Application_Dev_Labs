@@ -18,11 +18,11 @@
  *
  * In time, we will refactor this repository to use JpaRepository instead
  */
-package model.repositories;
+package org.example.lab03.model.repositories;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import model.entities.Customer;
+import org.example.lab03.model.entities.Customer;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 

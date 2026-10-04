@@ -1,7 +1,7 @@
-package model.services;
+package org.example.lab03.model.services;
 
-import model.entities.Customer;
-import model.repositories.CustomerRepository;
+import org.example.lab03.model.entities.Customer;
+import org.example.lab03.model.repositories.CustomerRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -1,11 +1,103 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>One Customer</title>
+
+    <style>
+        body {
+            width: 70%;
+            margin: 20px auto;
+            font-family: Arial, sans-serif;
+        }
+
+        h2 {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .customer-details p {
+            margin: 10px 0;
+        }
+
+        .reviews {
+            border-top: 1px solid #ddd;
+            margin-top: 30px;
+            padding-top: 15px;
+        }
+
+        .review {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+
+        .review p {
+            margin: 8px 0;
+        }
+    </style>
 </head>
+
 <body>
-One Customer is to be displayed here! <br>
-For the time being, check the console and observe the output
+
+<h2>Customer Details</h2>
+
+<div class="customer-details">
+    <p>
+        <strong>Customer ID:</strong>
+        <span th:text="${aCustomer.customerId}"></span>
+    </p>
+
+    <p>
+        <strong>Name:</strong>
+        <span th:text="${aCustomer.firstName + ' ' + aCustomer.lastName}"></span>
+    </p>
+
+    <p>
+        <strong>Email:</strong>
+        <span th:text="${aCustomer.email}"></span>
+    </p>
+
+    <p>
+        <strong>Address:</strong>
+        <span th:text="${aCustomer.address}"></span>
+    </p>
+
+    <p>
+        <strong>City:</strong>
+        <span th:text="${aCustomer.city}"></span>
+    </p>
+</div>
+
+<div class="reviews">
+
+    <h3>Customer Reviews</h3>
+
+    <div th:if="${#lists.isEmpty(aCustomer.reviewList)}">
+        No reviews available
+    </div>
+
+    <div class="review" th:each="review : ${aCustomer.reviewList}">
+
+        <p>
+            <strong>Rating:</strong>
+            <span th:text="${review.rating}"></span> / 5
+        </p>
+
+        <p>
+            <strong>Review Text:</strong>
+            <span th:text="${review.reviewText}"></span>
+        </p>
+
+        <p>
+            <strong>Review Date:</strong>
+            <span th:text="${review.reviewDate}"></span>
+        </p>
+
+    </div>
+
+</div>
+
 </body>
 </html>
