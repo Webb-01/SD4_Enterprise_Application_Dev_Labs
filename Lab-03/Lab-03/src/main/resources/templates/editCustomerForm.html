@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Edit Customer Details</title>
+
+</head>
+<body>
+
+<h1>Edit Customer: <td th:text="${customer.firstName} + ' ' + ${customer.lastName}"></td></h1>
+
+<!-- Edit customer form -->
+<form action="editCustomerForm.html" method="get">
+  <div>
+    <label for="customerId">Customer ID:</label>
+    <input type="text" id="customerId" name="customerId" th:value="${customer.customerId}" readonly />
+
+  </div>
+
+  <div>
+    <label for="firstName">First Name:</label>
+    <input type="text" id="firstName" name="firstName" th:value="${customer.firstName}" required />
+  </div>
+
+  <div>
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName" name="lastName" th:value="${customer.lastName}" required />
+  </div>
+
+  <div>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" th:value="${customer.email}" required />
+  </div>
+
+  <div>
+    <label for="password">Password:</label>
+    <input type="text" id="password" name="password" value="[Password]" required />
+  </div>
+
+  <div>
+    <label for="address">Address:</label>
+    <textarea id="address" name="address" rows="4" required th:text="${customer.address}"></textarea>
+  </div>
+
+  <div>
+    <label for="city">City:</label>
+    <input type="text" id="city" name="city" th:value="${customer.city}" required />
+  </div>
+  <div>
+    <button type="submit">Save Changes</button>
+  </div>
+</form>
+
+</body>
+</html>

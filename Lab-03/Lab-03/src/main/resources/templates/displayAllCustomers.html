@@ -23,6 +23,15 @@
     </style>
 </head>
 <body>
+
+<div th:if="${successMessage}" style="color: green;">
+    <p th:text="${successMessage}"></p>
+</div>
+
+<div th:if="${failMessage}" style="color: red;">
+    <p th:text="${failMessage}"></p>
+</div>
+
 <h1>Customer List</h1>
 <table>
     <tr>
@@ -31,6 +40,7 @@
         <th> <strong>Email</strong> </th>
         <th> <strong>Address</strong> </th>
         <th> <strong>City</strong> </th>
+        <th> <strong>Actions</strong> </th>
     </tr>
 
     <tr th:each="customer : ${customerList}">
@@ -43,6 +53,14 @@
         <td th:text="${customer.email}"></td>
         <td th:text="${customer.address}"></td>
         <td th:text="${customer.city}"></td>
+        <td>
+            <a th:href="@{/customers/delete/{id}(id=${customer.customerId})}"
+               th:onclick="'return confirm(\'Are you sure you want to delete this customer?\');'">Delete</a>
+            |
+            <a th:href="@{/customers/update/{id}(id=${customer.customerId})}"
+               th:text="Update">
+            </a>
+        </td>
     </tr>
 </table>
 </body>

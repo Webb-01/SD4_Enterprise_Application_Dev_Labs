@@ -1,19 +1,19 @@
 package org.example.lab03.controllers;
 
+import org.springframework.ui.Model;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.OneToMany;
+import lombok.ToString;
 import org.example.lab03.model.entities.Customer;
 import org.example.lab03.model.entities.Review;
 import org.example.lab03.model.repositories.CustomerRepository;
 import org.example.lab03.model.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +25,11 @@ public class CustomerController {
     private CustomerService customerService;
     @Autowired
     private CustomerRepository customerRepository;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    private List<Review> reviewList;
+
 
     //This method retrieves a list of all customers from the services.
     //This method is triggered when someone accesses the URL (customers/) and displays all customers in the view.
@@ -55,23 +60,104 @@ public class CustomerController {
         }
     }
 
-    @GetMapping("/delete/{customerId}")
-    public ModelAndView deleteCustomerById(@PathVariable long customerId)
-    {
-        Optional<Customer> foundCustomer = customerService.getCustomerById(customerId);
+    /**
+     * Deletes a customer from the database based on the provided customer ID.
+     *
+     * @param id The unique identifier of the customer to be deleted.
+     * @param redirectAttributes Used to add attributes to the redirect response,
+     *                           including flash attributes for success messages.
+     * @return A String representing the name of the view to redirect to after deletion.
+     */
+    @GetMapping("/delete/{id}")
+    public String deleteCustomer(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
 
-        if (foundCustomer.isPresent()) {
+        // Your implementation goes here
+        //you can use RedirectAttributes to pass data when redirecting from one controller method to another, particularly success/error messages.
+        Optional<Customer> foundCustomer = customerService.getCustomerById(id.longValue());
 
-            Customer aCustomer = foundCustomer.get();
-            customerService.deleteCustomer(aCustomer);
+        if (foundCustomer.isPresent())
+        {
+            try {
+                Customer aCustomer = foundCustomer.get();
+                customerService.deleteCustomer(aCustomer);
 
-            System.out.println("Customer has been deleted: " + aCustomer);
+                redirectAttributes.addFlashAttribute("successMessage","Customer Deleted Successfully");
+                return "redirect:/customers";
 
-            return new ModelAndView("/deleteCustomerById", "aCustomer",aCustomer);
-        } else {
-            return new ModelAndView("/customerNotFound", "customerId", customerId);
+            } catch (Exception e) {
+                redirectAttributes.addFlashAttribute("failMessage", "Customer Deletion Unsuccessful due to the reviews FK key");
+                return "redirect:/customers";
+            }
+        }
+        else {
+            redirectAttributes.addFlashAttribute("failMessage", "Customer Deleted Unsuccessful");
+            return "redirect:/customers";
         }
     }
+    /**
+     * Displays the update form for a specific customer identified by the given ID.
+     * If the customer is found, their details are pre-populated in the form.
+     * Otherwise, the user is redirected to the customer list with an error message.
+     *
+     * @param id The unique identifier of the customer to be updated.
+     * @param model The Model object used to pass customer details to the view.
+     * @return The name of the Thymeleaf template to render
+     *         if the customer is found (the update form), or a redirect to the customer list if not.
+     */
+    @GetMapping("/update/{id}")
+    public String showUpdateForm(@PathVariable("id") Integer id, Model model, RedirectAttributes redirectAttributes)
+    {
+        // Your implementation goes here
+        Optional<Customer> foundCustomer = customerService.getCustomerById(id.longValue());
+
+        if (foundCustomer.isPresent())
+        {
+            Customer aCustomer = foundCustomer.get();
+            model.addAttribute("customer",aCustomer);
+
+            return "editCustomerForm";
+        }
+        else{
+            redirectAttributes.addFlashAttribute("unsuccessfulMessage","Customer ID could not be found");
+            return "redirect:/customers";
+        }
+    }
+
+    /**
+     * Processes the submission of the customer update form.
+     * This method updates the customer details in the database
+     * based on the provided Customer object. After a successful update,
+     * the user is redirected to the customer list with a success message.
+     *
+     * @paramcustomer The Customer object containing the updated details
+     *                 of the customer, populated from the form submission.
+     * @paramredirectAttributes The RedirectAttributes object used to
+     *                           pass flash attributes to the redirected page,
+     *                           allowing for messages to be displayed to the user.
+     * @return A redirect string to the customer list page, indicating
+     *         that the update was successful.
+    */
+//
+//    @PostMapping("/update")
+//    public String updateCustomer(@ModelAttribute("customer") Customer customer, RedirectAttributes redirectAttributes) {
+//        // Your implementation goes here
+//            try{
+//                Customer aCustomer = customerService.updateCustomer(aCustomer);
+//
+//
+//                redirectAttributes.addFlashAttribute("successfulMessage", "Customer has been updated successfully");
+//                return "redirect:/customers";
+//
+//            }catch(Exception e) {
+//                redirectAttributes.addFlashAttribute("unsuccessfulMessage", "Could not locate customer ID returning to customer list");
+//                return "redirect:/customers";
+//            }
+//
+//        } else {
+//            redirectAttributes.addFlashAttribute("failMessage", "Customer could not be found Unsuccessful");
+//            return "redirect:/customer";
+//        }
+//        }
 
     @GetMapping("/add")
     public ModelAndView createCustomer()
@@ -90,26 +176,5 @@ public class CustomerController {
 
         System.out.println(mav);
         return mav;
-    }
-
-    @GetMapping("/update/{customerId}")
-    public ModelAndView updateCustomer(@PathVariable long customerId)
-    {
-        Optional<Customer> foundCustomer = customerService.getCustomerById(customerId);
-
-        if (foundCustomer.isPresent())
-        {
-            Customer aCustomer = foundCustomer.get();
-            aCustomer.setFirstName("Hello");
-            aCustomer.setLastName("World");
-
-            customerService.updateCustomer(aCustomer);
-
-            System.out.println("Customer has been updated" + aCustomer);
-            return new ModelAndView("updateCustomer", "aCustomer", aCustomer);
-
-        }else{
-            return new ModelAndView("/customerNotFound","aCustomer",customerId);
-        }
     }
 }
