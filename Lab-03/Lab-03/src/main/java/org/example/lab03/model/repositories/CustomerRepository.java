@@ -20,47 +20,11 @@
  */
 package org.example.lab03.model.repositories;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.example.lab03.model.entities.Customer;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 
 @Repository
-@Transactional
-public class CustomerRepository {
-
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    public Optional<Customer> findById(Long id) {
-        return Optional.ofNullable(entityManager.find(Customer.class, id));
-    }
-
-    public Customer save(Customer customer) {
-        if (customer.getCustomerId() == null) {
-            entityManager.persist(customer);
-            return customer;
-        } else {
-            return entityManager.merge(customer);
-        }
-    }
-
-    public List<Customer> findAll() {
-        String query = "SELECT c FROM Customer c";
-        return entityManager.createQuery(query, Customer.class).getResultList();
-    }
-
-    public void delete(Customer customer) {
-        if (entityManager.contains(customer)) {
-            entityManager.remove(customer);
-        } else {
-            entityManager.remove(entityManager.merge(customer));
-        }
-    }
-
+public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
 }

@@ -31,29 +31,18 @@
         <th> <strong>Email</strong> </th>
         <th> <strong>Address</strong> </th>
         <th> <strong>City</strong> </th>
-        <th> <strong>Reviews</strong> </th>
     </tr>
 
     <tr th:each="customer : ${customerList}">
-        <td th:text="${customer.customerId}"></td>
-        <td th:text="${customer.firstName}+ ' ' +${customer.lastName}"></td>
+        <td>
+            <a th:href="@{/customers/{id}(id=${customer.customerId})}"
+               th:text="${customer.customerId}">
+            </a>
+        </td>
+        <td th:text="${customer.firstName} + ' ' + ${customer.lastName}"></td>
         <td th:text="${customer.email}"></td>
         <td th:text="${customer.address}"></td>
         <td th:text="${customer.city}"></td>
-
-        <td>
-            <ul>
-                <li th:each="review : ${customer.reviewList}">
-                    <strong>
-                        Rating: <span th:text="${review.rating}"></span> / 5
-                    </strong>
-                    <span th:text="${review.reviewText}"></span>
-                </li>
-            </ul>
-            <span th:unless="${not #lists.isEmpty(customer.reviewList)}">
-                No Reviews Available
-            </span>
-        </td>
     </tr>
 </table>
 </body>
