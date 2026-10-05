@@ -118,7 +118,7 @@ public class CustomerController {
             return "editCustomerForm";
         }
         else{
-            redirectAttributes.addFlashAttribute("unsuccessfulMessage","Customer ID could not be found");
+            redirectAttributes.addFlashAttribute("failMessage","Customer ID could not be found");
             return "redirect:/customers";
         }
     }
@@ -137,27 +137,21 @@ public class CustomerController {
      * @return A redirect string to the customer list page, indicating
      *         that the update was successful.
     */
-//
-//    @PostMapping("/update")
-//    public String updateCustomer(@ModelAttribute("customer") Customer customer, RedirectAttributes redirectAttributes) {
-//        // Your implementation goes here
-//            try{
-//                Customer aCustomer = customerService.updateCustomer(aCustomer);
-//
-//
-//                redirectAttributes.addFlashAttribute("successfulMessage", "Customer has been updated successfully");
-//                return "redirect:/customers";
-//
-//            }catch(Exception e) {
-//                redirectAttributes.addFlashAttribute("unsuccessfulMessage", "Could not locate customer ID returning to customer list");
-//                return "redirect:/customers";
-//            }
-//
-//        } else {
-//            redirectAttributes.addFlashAttribute("failMessage", "Customer could not be found Unsuccessful");
-//            return "redirect:/customer";
-//        }
-//        }
+
+    @PostMapping("/update")
+    public String updateCustomer(@ModelAttribute("customer") Customer customer, RedirectAttributes redirectAttributes) {
+        // Your implementation goes here
+        try {
+            customerService.updateCustomer(customer);
+
+            redirectAttributes.addFlashAttribute("successMessage", "Customer has been updated successfully");
+            return "redirect:/customers";
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("failMessage", "Could not locate customer ID returning to customer list");
+            return "redirect:/customers";
+        }
+    }
 
     @GetMapping("/add")
     public ModelAndView createCustomer()

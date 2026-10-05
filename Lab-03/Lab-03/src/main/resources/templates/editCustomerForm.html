@@ -2,20 +2,56 @@
 <html lang="en">
 <head>
   <title>Edit Customer Details</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
+    form {
+      width: 50%;
+      border-radius: 5px;
+      background-color: #f2f2f2;
+      padding: 20px;
+    }
+
+    label {display: block;}
+
+    input[type=text], input[type=email], textarea, select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      margin-top: 6px;
+      margin-bottom: 16px;
+      resize: vertical;
+    }
+
+    button[type=submit] {
+      background-color: #04AA6D;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button[type=submit]:hover {
+      background-color: #45a049;
+    }
+
+  </style>
 </head>
+
 <body>
 
 <h1>Edit Customer: <td th:text="${customer.firstName} + ' ' + ${customer.lastName}"></td></h1>
 
 <!-- Edit customer form -->
-<form action="editCustomerForm.html" method="get">
-  <div>
-    <label for="customerId">Customer ID:</label>
-    <input type="text" id="customerId" name="customerId" th:value="${customer.customerId}" readonly />
-
-  </div>
-
+<form th:action="@{/customers/update}" method="post">
+    <input type="hidden" id="customerId" name="customerId" th:value="${customer.customerId}" readonly />
   <div>
     <label for="firstName">First Name:</label>
     <input type="text" id="firstName" name="firstName" th:value="${customer.firstName}" required />
@@ -33,7 +69,7 @@
 
   <div>
     <label for="password">Password:</label>
-    <input type="text" id="password" name="password" value="[Password]" required />
+    <input type="password" id="password" name="password" th:value="${customer.password}" required />
   </div>
 
   <div>
@@ -46,7 +82,7 @@
     <input type="text" id="city" name="city" th:value="${customer.city}" required />
   </div>
   <div>
-    <button type="submit">Save Changes</button>
+      <button type="submit">Save Changes</button>
   </div>
 </form>
 
